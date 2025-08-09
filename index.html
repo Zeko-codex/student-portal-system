@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تسجيل الدخول</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(-45deg, #00c6ff, #7f00ff, #00c6ff, #7f00ff);
+      background-size: 400% 400%;
+      animation: backgroundMove 10s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    @keyframes backgroundMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .login-box {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 360px;
+      animation: slideIn 1s ease forwards;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .login-box img {
+      width: 170px;
+      margin-bottom: 25px;
+      animation: floatLogo 4s ease-in-out infinite;
+    }
+    @keyframes floatLogo {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .login-box h2 {
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      background: rgba(255,255,255,0.8);
+    }
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      color: white;
+      background: linear-gradient(-45deg, #7f00ff, #00c6ff, #7f00ff);
+      background-size: 400% 400%;
+      animation: animatedButton 6s ease infinite;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    @keyframes animatedButton {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .error {
+      display: none;
+      margin-top: 15px;
+      background-color: rgba(255, 0, 0, 0.3);
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <img src="logo.png" alt="Logo" />
+    <h2>تسجيل الدخول</h2>
+    <input type="text" id="username" placeholder="اسم المستخدم" />
+    <input type="password" id="password" placeholder="كلمة المرور" />
+    <button onclick="login()">دخول</button>
+    <div id="error" class="error"></div>
+  </div>
+<script>
+async function login() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorDiv = document.getElementById("error");
+
+  try {
+    const url = `https://script.google.com/macros/s/AKfycbwJOYcTymGRr0elbMD2H5EJOk9zSZq5K9G3e_42zwKKgW8iVjkRV2-VonRz8jPw_2j5/exec?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+    
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    localStorage.setItem("student", JSON.stringify(data));
+    window.location.href = "profile.html";
+    
+  } catch (err) {
+    errorDiv.innerText = "اسم المستخدم أو كلمة المرور خاطئة.";
+    errorDiv.style.display = "block";
+    console.error("Error:", err);
+  }
+}
+</script>
+
+</body>
+</html>
