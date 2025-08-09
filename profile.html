@@ -123,42 +123,63 @@
   const examsTableBody = document.querySelector("#examsTable tbody");
   const workshopsTableBody = document.querySelector("#workshopsTable tbody");
 
+  // حساب درجات الامتحانات
   let examTotal = 0;
   let examCount = 0;
+  let examMaxPossible = 0;
 
   for (let i = 1; i <= 30; i++) {
-    const mark = Number(student[`exam${i}`]);
-    if (!isNaN(mark)) {
-      const row = `<tr><td>امتحان ${i}</td><td>${mark}</td></tr>`;
-      examsTableBody.innerHTML += row;
-      examTotal += mark;
-      examCount++;
+    const mark = student[`exam${i}`];
+    if (mark !== null && mark !== undefined && mark !== "") {
+      const numericMark = Number(mark);
+      if (!isNaN(numericMark)) {
+        const row = `<tr><td>امتحان ${i}</td><td>${numericMark}</td></tr>`;
+        examsTableBody.innerHTML += row;
+        examTotal += numericMark;
+        examCount++;
+        examMaxPossible += 15; // كل امتحان درجته القصوى 15
+      }
     }
   }
 
-  const examPercent = examCount ? (examTotal / (examCount * 15)) * 100 : 0;
-  document.getElementById("examTotal").innerText = `المجموع: ${examTotal}`;
+  const examPercent = examCount > 0 ? (examTotal / examMaxPossible) * 100 : 0;
+  document.getElementById("examTotal").innerText = `المجموع: ${examTotal} (من ${examMaxPossible})`;
   document.getElementById("examPercentage").innerText = `النسبة المئوية: ${examPercent.toFixed(2)}%`;
 
+  // حساب درجات الورش
   let workshopTotal = 0;
   let workshopCount = 0;
+  let workshopMaxPossible = 0;
 
   for (let i = 1; i <= 10; i++) {
-    const mark = Number(student[`workshop${i}`]);
-    if (!isNaN(mark)) {
-      const row = `<tr><td>ورشة ${i}</td><td>${mark}</td></tr>`;
-      workshopsTableBody.innerHTML += row;
-      workshopTotal += mark;
-      workshopCount++;
+    const mark = student[`workshop${i}`];
+    if (mark !== null && mark !== undefined && mark !== "") {
+      const numericMark = Number(mark);
+      if (!isNaN(numericMark)) {
+        const row = `<tr><td>ورشة ${i}</td><td>${numericMark}</td></tr>`;
+        workshopsTableBody.innerHTML += row;
+        workshopTotal += numericMark;
+        workshopCount++;
+        workshopMaxPossible += 50; // كل ورشة درجتها القصوى 50
+      }
     }
   }
 
-  const workshopPercent = workshopCount ? (workshopTotal / (workshopCount * 50)) * 100 : 0;
-  document.getElementById("workshopTotal").innerText = `المجموع: ${workshopTotal}`;
+  const workshopPercent = workshopCount > 0 ? (workshopTotal / workshopMaxPossible) * 100 : 0;
+  document.getElementById("workshopTotal").innerText = `المجموع: ${workshopTotal} (من ${workshopMaxPossible})`;
   document.getElementById("workshopPercentage").innerText = `النسبة المئوية: ${workshopPercent.toFixed(2)}%`;
 
-  const overallPercent = ((examPercent + workshopPercent) / 2).toFixed(2);
-  document.getElementById("overallPercentage").innerText = `النسبة العامة: ${overallPercent}%`;
+  // حساب النسبة العامة
+  let overallPercent = 0;
+  if (examCount > 0 && workshopCount > 0) {
+    overallPercent = (examPercent + workshopPercent) / 2;
+  } else if (examCount > 0) {
+    overallPercent = examPercent;
+  } else if (workshopCount > 0) {
+    overallPercent = workshopPercent;
+  }
+
+  document.getElementById("overallPercentage").innerText = `النسبة العامة: ${overallPercent.toFixed(2)}%`;
 </script>
 
 
